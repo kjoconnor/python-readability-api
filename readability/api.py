@@ -376,7 +376,7 @@ class Readability(ReadabilityCore):
         if tags is None:
             raise ValueError('Tags must be provided.')
 
-        r = self._post_resource(('bookmarks/%s' % bookmark.id), tags=tags}))
+        r = self._post_resource(('bookmarks/%s' % bookmark.id), tags=tags)
         
         if r['status'] not in ('200', '202', '409'):
             raise ResponseError('')
