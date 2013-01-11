@@ -294,7 +294,7 @@ class Readability(ReadabilityCore):
     def get_tags(self, bookmark_id, **filters):
         """Gets tags on a given bookmark."""
 
-        return self._get_resources(('tags', id), Tag, limit=limit, **filters)
+        return self._get_resources(('tags', id), Tag, **filters)
 
 
     def get_contributions(self, limit=None, **filters):
