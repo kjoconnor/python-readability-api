@@ -34,6 +34,19 @@ class Tag(BaseResource):
     def __repr__(self):
         return '<tag id="%s" text="%s">' % (self.id, self.text)
 
+    @staticmethod
+    def new_from_dict(d, rdd=None):
+
+        b = to_python(
+            obj=Tag(), in_dict=d,
+            string_keys = (
+                'id', 'text',
+            ),
+            _rdd = rdd
+        )
+
+        return b
+
     def delete(self):
         """Deletes Tag."""
         return self._rdd._delete_resource(('tags', self.id))
