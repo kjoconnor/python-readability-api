@@ -15,7 +15,7 @@ import oauth2
 from decorator import decorator
 
 from .config import settings
-from .models import Bookmark, Article, Domain, Contribution, User
+from .models import Bookmark, Article, Domain, Contribution, User, Tag
 from .helpers import is_collection, to_python, to_api, get_scope
 
 
