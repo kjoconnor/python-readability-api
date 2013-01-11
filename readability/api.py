@@ -291,6 +291,11 @@ class Readability(ReadabilityCore):
 
         return self._get_resource(('bookmarks', id), Bookmark)
 
+    def get_tags(self, bookmark_id, **filters):
+        """Gets tags on a given bookmark."""
+
+        return self._get_resources(('tags', id), Tag, limit=limit, **filters)
+
 
     def get_contributions(self, limit=None, **filters):
         """Gets a list of contributions."""
@@ -364,6 +369,22 @@ class Readability(ReadabilityCore):
         resource = loc.split('/').pop()
 
         return self.get_bookmark(resource)
+
+    def add_tags(self, bookmark, tags=None):
+        """Adds tags to the given bookmark."""
+
+        if tags is None:
+            raise ValueError('Tags must be provided.')
+
+        r = self._post_resource(('bookmarks/%s' % bookmark.id), tags=tags}))
+        
+        if r['status'] not in ('200', '202', '409'):
+            raise ResponseError('')
+
+        loc = r['location']
+        resource = loc.split('/').pop()
+
+        return self.get_tags(resource)
 
 
 # ----------

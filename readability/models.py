@@ -25,6 +25,18 @@ class BaseResource(object):
 
         return d.keys()
 
+class Tag(BaseResource):
+    """Tag API Model."""
+    def __init__(self):
+        self.id = None
+        self.text = None
+
+    def __repr__(self):
+        return '<tag id="%s" text="%s">' % (self.id, self.text)
+
+    def delete(self):
+        """Deletes Tag."""
+        return self._rdd._delete_resource(('tags', self.id))
 
 
 class Bookmark(BaseResource):
