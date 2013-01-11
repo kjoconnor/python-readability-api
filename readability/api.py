@@ -185,9 +185,16 @@ class ReadabilityCore(object):
 
         meta = response.get('meta')
 
+        # To account for /bookmark/id/tags endpoint
+        if len(key.split('/')) > 1:
+            k = key.split('/')
+            k.reverse()
+            key = k[0]
+
         items.extend(self._to_map(obj, response.get(key)))
 
-        if (len(items) < limit) or (limit is None):
+        # Tag endpoint does not return meta
+        if (len(items) < limit) or (limit is None) and meta is not None:
             for i in range(meta.get('page')+1, meta.get('num_pages')+1):
                 kwargs.update(page=i)
                 if (len(items) < limit) or (limit is None):
@@ -291,10 +298,11 @@ class Readability(ReadabilityCore):
 
         return self._get_resource(('bookmarks', id), Bookmark)
 
-    def get_tags(self, bookmark_id, **filters):
+    def get_tags(self, bookmark, **filters):
         """Gets tags on a given bookmark."""
 
-        return self._get_resources(('tags', id), Tag, **filters)
+        return self._get_resources('bookmarks/%s/tags' % bookmark.id, Tag)
+        
 
 
     def get_contributions(self, limit=None, **filters):
@@ -376,15 +384,12 @@ class Readability(ReadabilityCore):
         if tags is None:
             raise ValueError('Tags must be provided.')
 
-        r = self._post_resource(('bookmarks/%s' % bookmark.id), tags=tags)
+        r = self._post_resource(('bookmarks/%s/tags/' % bookmark.id), tags=tags)
         
         if r['status'] not in ('200', '202', '409'):
             raise ResponseError('')
 
-        loc = r['location']
-        resource = loc.split('/').pop()
-
-        return self.get_tags(resource)
+        return self.get_tags(bookmark)
 
 
 # ----------
